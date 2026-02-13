@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5, user-scalable=yes">
+    <meta name="description" content="APP para rastrear ubicación y conexión en Android">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="GeoTracker">
+
+    <title>GeoTracker - Android PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231a1a2e' width='192' height='192'/><circle cx='96' cy='96' r='50' fill='%2300d4ff'/></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%231a1a2e' width='180' height='180'/><circle cx='90' cy='90' r='45' fill='%2300d4ff'/></svg>">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099cc;
+            --bg: #1a1a2e;
+            --bg-light: #16213e;
+            --text: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --error: #ff4757;
+            --success: #2ed573;
+            --warning: #ffa502;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--bg-light) 100%);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            height: 100dvh;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100dvb;
+            position: relative;
+        }
+
+        header {
+            padding: 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border-bottom: 2px solid var(--primary);
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.15);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, var(--primary), #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .description {
+            font-size: 11px;
+            color: var(--text-muted);
+            /* text-transform: uppercase; */
+            /* letter-spacing: 1px; */
+        }
+
+
+        main {
+            width: 100%;
+            padding: 20px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        section {
+            background: var(--bg-light);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        section:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.15);
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .status-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .status-value.inactive {
+            color: var(--text-muted);
+        }
+
+        .status-value.error {
+            color: var(--error);
+        }
+
+        .status-value.success {
+            color: var(--success);
+        }
+
+        .connection-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .connection-badge.online {
+            background: rgba(46, 213, 115, 0.2);
+            color: var(--success);
+        }
+
+        .connection-badge.offline {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        button {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #00ffff);
+            color: var(--bg);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.25);
+        }
+
+        .btn-danger {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 71, 87, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .csv-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 12px;
+            color: var(--primary);
+            line-height: 1.4;
+        }
+
+        .csv-preview::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .csv-preview::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .csv-preview::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .record-count {
+            padding: 8px 12px;
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 3px solid var(--primary);
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .record-count strong {
+            color: var(--primary);
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            border-left: 3px solid;
+        }
+
+        .alert.info {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .alert.warning {
+            background: rgba(255, 165, 2, 0.1);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .alert.error {
+            background: rgba(255, 71, 87, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        footer {
+            padding: 16px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            main {
+                padding: 16px;
+            }
+
+            section {
+                padding: 14px;
+                margin-bottom: 12px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            .status-item {
+                font-size: 13px;
+                padding: 8px 0;
+            }
+
+            .button-group {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+
+            .csv-preview {
+                font-size: 10px;
+                max-height: 150px;
+            }
+        }
+
+        .install-banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 255, 255, 0.1));
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .install-banner.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .install-banner button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .pulsing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s ease-in-out infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>GeoTracker</h1>
+            <p class="subtitle">APP Registra Ubicación & Conexión</p>
+            <p class="description">Permite relevar señal geoposicionada</p>
+        </header>
+
+        <main>
+            <div id="installBanner" class="install-banner">
+                <strong>Instalar como aplicación</strong>
+                <p style="margin: 8px 0 0 0; font-size: 12px;">Acceso rápido desde la pantalla de inicio</p>
+                <p style="margin: 4px 0 8px 0; font-size: 12px;">Funciona offline</p>
+                <button class="btn-primary" id="installBtn" style="margin: 0;">Instalar APP</button>
+            </div>
+
+            <section>
+                <h2>Ubicación</h2>
+                <div class="status-item">
+                    <span class="status-label">Latitud</span>
+                    <span class="status-value" id="latitude">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Longitud</span>
+                    <span class="status-value" id="longitude">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Precisión</span>
+                    <span class="status-value" id="accuracy">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Última actualización</span>
+                    <span class="status-value" id="lastUpdate" style="font-size: 12px;">--</span>
+                </div>
+                <div id="geoAlert" class="alert info" style="margin-top: 12px; display: none;">
+                    <span class="spinner"></span>
+                    <span id="geoAlertText">Obteniendo ubicación...</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Conexión de Red</h2>
+                <div class="status-item">
+                    <span class="status-label">Estado Online</span>
+                    <span class="connection-badge" id="onlineBadge">Desconocido</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Tipo de Conexión</span>
+                    <span class="status-value" id="connectionType">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Velocidad Efectiva</span>
+                    <span class="status-value" id="effectiveType">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Velocidad (Mbps)</span>
+                    <span class="status-value" id="downlink">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">RTT (ms)</span>
+                    <span class="status-value" id="rtt">--</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Estado de la Aplicación</h2>
+                <div class="status-item">
+                    <span class="status-label">Service Worker</span>
+                    <span class="status-value" id="swStatus">--</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Grabación Automática</span>
+                    <span class="status-value" id="recordingStatus">Inactiva</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Registros</span>
+                    <span class="status-value" id="recordCount">0</span>
+                </div>
+                <div class="button-group" style="margin-top: 14px;">
+                    <button class="btn-primary" id="startBtn">▶ Iniciar</button>
+                    <button class="btn-secondary" id="stopBtn" disabled>⏹ Detener</button>
+                    <!-- <button class="btn-secondary" onclick="probarStorage()"  >⏹ TEST</button> -->
+                    
+                </div>
+            </section>
+
+            <section>
+                <h2>Datos Recolectados</h2>
+                <div id="recordInfo" class="record-count" style="display: none;">
+                    <strong id="recordInfoText">0 registros</strong> almacenados localmente
+                </div>
+                <div id="noCsvAlert" class="alert info">
+                    Inicia la grabación para comenzar a recolectar datos
+                </div>
+                <div id="csvPreviewContainer" style="display: none;">
+                    <div class="csv-preview" id="csvPreview"></div>
+                </div>
+                <div class="button-group" style="margin-top: 12px;">
+                    <button class="btn-secondary" id="previewBtn" >Vista Previa</button>
+                    <button class="btn-primary" id="downloadBtn" disabled>Descargar CSV</button>
+                </div>
+                <button class="btn-danger" id="clearBtn" style="width: 100%; margin-top: 12px;" disabled>Limpiar
+                    Datos</button>
+            </section>            
+            <section>
+                <h2>Información</h2>
+                <div style="font-size: 13px; line-height: 1.6; color: var(--text-muted);">
+                    <p><strong style="color: var(--primary);">¿Cómo funciona?</strong></p>
+                    <p style="margin-top: 8px;">Esta APP recolecta automáticamente tu ubicación GPS y datos de conexión
+                        cada 15 segundos y los guarda en formato CSV.</p>
+                    <p style="margin-top: 8px;"><strong style="color: var(--primary);">Permisos necesarios:</strong></p>
+                    <ul style="margin: 8px 0 0 16px;">
+                        <li>Ubicación (GPS)</li>
+                        <li>Acceso a información de red</li>
+                    </ul>
+                    <p style="margin-top: 8px;"><strong style="color: var(--primary);">Limitaciones en Android:</strong>
+                    </p>
+                    <ul style="margin: 8px 0 0 16px;">
+                        <li>No funciona en background </li>
+                        <li>Requiere GPS activado en el dispositivo</li>
+                        <li>Los datos se guardan localmente en el navegador</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+             <p>v3.1.6 | <a href="https://www.linkedin.com/in/enrique-rafael-lopez/"> Rafael Lopez </a>| © 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => {                    
+                    document.getElementById('swStatus').textContent = 'Activo';
+                    document.getElementById('swStatus').classList.remove('inactive');
+                    document.getElementById('swStatus').classList.add('success');
+                })
+                .catch(err => {                    
+                    document.getElementById('swStatus').textContent = 'Error';
+                    document.getElementById('swStatus').classList.add('error');
+                });
+        } else {
+            document.getElementById('swStatus').textContent = 'No soportado';
+            document.getElementById('swStatus').classList.add('error');
+        }
+    </script>
+    <script src="app.js?v=3.1.6"></script>
+</body>
+
+</html>
