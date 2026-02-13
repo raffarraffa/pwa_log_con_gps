@@ -4,30 +4,28 @@
 ![PWA](https://img.shields.io/badge/PWA-enabled-success.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-## 📋 Descripción
+## Descripción
 
 **GeoTracker** es una Progressive Web App (PWA) diseñada para Android que permite rastrear y registrar automáticamente la ubicación GPS y la calidad de conexión de red. La aplicación recolecta datos cada 15 segundos y los almacena localmente en formato CSV para su posterior análisis.
 
-### ✨ Características Principales
+### Características Principales
 
-- 📍 **Rastreo GPS en tiempo real** con alta precisión
-- 📶 **Monitoreo de conexión de red** (tipo, velocidad, latencia)
-- 💾 **Almacenamiento local** - Los datos permanecen en el dispositivo
-- 📊 **Exportación a CSV** para análisis posterior
-- 🔒 **Privacidad total** - No se envían datos a servidores externos
-- 📱 **Instalable como app nativa** en Android
-- ⚡ **Funciona offline** gracias a Service Workers
-- 🎨 **Interfaz moderna y responsive**
+-  **Rastreo GPS en tiempo real** con alta precisión
+-  **Monitoreo de conexión de red** (tipo, velocidad, latencia)
+-  **Almacenamiento local** - Los datos permanecen en el dispositivo
+-  **Exportación a CSV** para análisis posterior
+-  **Privacidad total** - No se envían datos a servidores externos
+-  **Instalable como app nativa** en Android
+-  **Funciona offline** gracias a Service Workers
+-  **Interfaz moderna y responsive**
 
 ---
-
-## �️ Caso de Uso: Mapas de Calor de Señal
 
 ### Análisis de Cobertura en Zonas Geográficas
 
 **GeoTracker** es ideal para crear **mapas de calor de cobertura de señal** en áreas específicas. Al recolectar datos de ubicación GPS junto con información de calidad de red, puedes:
 
-#### 📊 Aplicaciones Prácticas
+#### Aplicaciones Prácticas
 
 - **Análisis de cobertura móvil** - Identificar zonas con mejor/peor señal
 - **Planificación de infraestructura** - Detectar áreas que requieren mejoras
@@ -35,7 +33,7 @@
 - **Comparación de operadores** - Evaluar cobertura entre diferentes proveedores
 - **Optimización de rutas** - Planificar trayectos con mejor conectividad
 
-#### 🎯 Cómo Generar un Mapa de Calor
+#### Caso de Uso Cómo Generar un Mapa de Calor de Señal. 
 
 1. **Recolección de Datos**
    - Recorrer la zona de interés con la app activa
@@ -59,7 +57,7 @@
    - Detectar zonas críticas (baja señal)
    - Generar reportes visuales con mapas de calor
 
-#### 📈 Ejemplo de Análisis
+#### Ejemplo de Análisis
 
 ```python
 # Ejemplo simple con Python y Folium
@@ -85,7 +83,7 @@ HeatMap(heat_data).add_to(mapa)
 mapa.save('mapa_calor_señal.html')
 ```
 
-#### 💡 Métricas Útiles para Mapas de Calor
+#### Métricas Útiles para Mapas de Calor
 
 | Métrica | Uso en Mapa de Calor | Interpretación |
 |---------|---------------------|----------------|
@@ -96,7 +94,7 @@ mapa.save('mapa_calor_señal.html')
 
 ---
 
-## �🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Requisitos Previos
 
@@ -121,7 +119,7 @@ mapa.save('mapa_calor_señal.html')
 
 ---
 
-## 📖 Uso
+## Uso
 
 ### Iniciar Rastreo
 
@@ -150,7 +148,7 @@ mapa.save('mapa_calor_señal.html')
 
 ---
 
-## 📊 Formato de Datos CSV
+## Formato de Datos CSV
 
 Los datos se exportan en formato CSV con las siguientes columnas:
 
@@ -174,7 +172,7 @@ timestamp,latitude,longitude,online,effectiveType,downlink,rtt
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 - **HTML5** - Estructura semántica
 - **CSS3** - Diseño moderno con gradientes y animaciones
@@ -187,7 +185,7 @@ timestamp,latitude,longitude,online,effectiveType,downlink,rtt
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 pwa_log_con_gps/
@@ -200,7 +198,7 @@ pwa_log_con_gps/
 
 ---
 
-## ⚙️ Configuración
+## Configuración
 
 ### Parámetros Modificables en `app.js`
 
@@ -222,7 +220,7 @@ const CONFIG = {
 const NOMBRE_CACHE = 'aplicacion-v3.1.6';  // ← CAMBIAR ESTA VERSIÓN
 ```
 
-#### 📝 Cuándo actualizar la versión:
+#### Cuándo actualizar la versión:
 
 - ✅ Modificaste `index.html`
 - ✅ Modificaste `app.js`
@@ -230,14 +228,14 @@ const NOMBRE_CACHE = 'aplicacion-v3.1.6';  // ← CAMBIAR ESTA VERSIÓN
 - ✅ Modificaste estilos CSS
 - ✅ Agregaste nuevos archivos
 
-#### 🔄 Proceso de actualización:
+#### Proceso de actualización:
 
 1. **Incrementar la versión** (ej: `v3.1.6` → `v3.1.7`)
 2. **Guardar el archivo** `service-worker.js`
 3. **Recargar la aplicación** en el navegador
 4. **Verificar** que el Service Worker se actualice
 
-#### ⚡ Formato de versionado recomendado:
+#### Formato de versionado recomendado:
 
 ```
 v[MAJOR].[MINOR].[PATCH]
@@ -249,7 +247,7 @@ Ejemplos:
 - v4.0.0  → Cambios importantes
 ```
 
-> **💡 Tip:** Si no actualizas la versión del caché, los usuarios seguirán viendo la versión antigua de los archivos debido al caché del Service Worker.
+> ** Tip:** Si no actualizas la versión del caché, los usuarios seguirán viendo la versión antigua de los archivos debido al caché del Service Worker.
 
 ### Opciones de Geolocalización
 
@@ -263,9 +261,9 @@ Ejemplos:
 
 ---
 
-## 🔒 Privacidad y Seguridad
+## Privacidad y Seguridad
 
-### ✅ Garantías de Privacidad
+### Garantías de Privacidad
 
 - ✔️ **Almacenamiento 100% local** - Los datos nunca salen del dispositivo
 - ✔️ **Sin servidores externos** - No hay comunicación con APIs remotas
@@ -280,7 +278,7 @@ Ejemplos:
 
 ---
 
-## 📱 Limitaciones en Android
+## Limitaciones en Android
 
 ### Restricciones del Sistema
 
@@ -298,7 +296,7 @@ Ejemplos:
 
 ---
 
-## 🐛 Solución de Problemas
+## Solución de Problemas
 
 ### La app no obtiene ubicación
 
@@ -320,14 +318,14 @@ Ejemplos:
 
 ---
 
-## 🔄 Actualizaciones
+## Actualizaciones
 
 ### Versión 3.1.6 (Actual)
 
-- ✨ Interfaz mejorada con diseño moderno
-- 🐛 Correcciones de estabilidad
-- 📊 Optimización del formato CSV
-- 🎨 Mejoras visuales y de UX
+- Interfaz mejorada con diseño moderno
+- Correcciones de estabilidad
+- Optimización del formato CSV
+- Mejoras visuales y de UX
 
 ### Historial de Versiones
 
@@ -335,7 +333,7 @@ Ver el archivo `CHANGELOG.md` para el historial completo de cambios.
 
 ---
 
-## 👨‍💻 Desarrollo
+## Desarrollo
 
 ### Ejecutar Localmente
 
@@ -360,7 +358,7 @@ http://localhost:8000
 
 ---
 
-## 🤝 Contribuciones
+## Contribuciones
 
 Las contribuciones son bienvenidas. Por favor:
 
@@ -378,7 +376,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-## 👤 Autor
+## Autor
 
 **Rafael Lopez**
 
@@ -387,7 +385,7 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-## 🙏 Agradecimientos
+## Agradecimientos
 
 - Comunidad de desarrolladores PWA
 - Contribuidores del proyecto
@@ -395,13 +393,13 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-## 📞 Soporte
+## Soporte
 
 Si encuentras algún problema o tienes sugerencias:
 
-- 🐛 [Reportar un bug](https://github.com/raffarraffa/pwa_log_con_gps/issues)
-- 💡 [Solicitar una feature](https://github.com/raffarraffa/pwa_log_con_gps/issues)
-- 📧 Contacto directo vía LinkedIn
+- [Reportar un bug](https://github.com/raffarraffa/pwa_log_con_gps/issues)
+- [Solicitar una feature](https://github.com/raffarraffa/pwa_log_con_gps/issues)
+- Contacto directo vía LinkedIn
 
 ---
 
@@ -416,8 +414,6 @@ Si encuentras algún problema o tienes sugerencias:
 
 <div align="center">
 
-**⭐ Si te resulta útil este proyecto, considera darle una estrella en GitHub ⭐**
-
-Hecho con ❤️ por Rafael Lopez | © 2026
+** Si te resulta útil este proyecto, considera darle una estrella en GitHub **
 
 </div>
