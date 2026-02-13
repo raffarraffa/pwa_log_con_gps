@@ -102,11 +102,11 @@ mapa.save('mapa_calor_señal.html')
 - Dispositivo Android con GPS activado
 - Permisos de ubicación habilitados
 
-### Instalación
+### Instalación [Demo]
 
 1. **Acceder a la aplicación**
-   ```
-   Abrir en el navegador: https://tu-dominio.com
+    ```
+   https://signal.rafalopez.ar/
    ```
 
 2. **Instalar como PWA**
