@@ -2,7 +2,7 @@ const CONFIG = {
     INTERVAL_MS: 15000,
     STORAGE_KEY: 'geotracker_csv',
     MAX_PREVIEW_LINES: 50,
-    CSV_HEADER: 'timestamp,latitude,longitude,online,effectiveType,downlink,rtt\n'
+    CSV_HEADER: 'timestamp,latitude,longitude,online,connectionType,effectiveType,downlink,rtt\n'
 };
 
 let appState = {
@@ -10,6 +10,7 @@ let appState = {
     geoWatchId: null,
     intervalId: null,
     lastCoords: null,
+    connectionType:null,
     lastNetworkInfo: null,
     totalRecords: 0
 };
@@ -182,6 +183,7 @@ function updateConnectionInfo() {
     if (conn) {
         appState.lastNetworkInfo = {
             online: isOnline,
+            connectionType:conn.connectionType || 'N/A',
             effectiveType: conn.effectiveType || 'N/A',
             downlink: conn.downlink ?? 'N/A',
             rtt: conn.rtt ?? 'N/A'
@@ -198,9 +200,9 @@ function recordData() {
     if (!appState.lastCoords || !appState.lastNetworkInfo) return;
 
     const { latitude, longitude, timestamp } = appState.lastCoords;
-    const { online, effectiveType, downlink, rtt } = appState.lastNetworkInfo;
+    const { online, connectionType,effectiveType, downlink, rtt } = appState.lastNetworkInfo;
 
-    const line = `${timestamp.toISOString()},${latitude},${longitude},${online},${effectiveType},${downlink},${rtt}\n`;
+    const line = `${timestamp.toISOString()},${latitude},${longitude},${online},${connectionType},${effectiveType},${downlink},${rtt}\n`;
 
     let csv = localStorage.getItem(CONFIG.STORAGE_KEY);
     if (!csv) csv = CONFIG.CSV_HEADER;
