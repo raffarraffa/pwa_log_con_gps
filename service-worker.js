@@ -1,4 +1,4 @@
-const NOMBRE_CACHE = 'aplicacion-v3.1.6';
+const NOMBRE_CACHE = 'aplicacion-v3.1.7';
 
 const ARCHIVOS_CACHE = [
     '/',
