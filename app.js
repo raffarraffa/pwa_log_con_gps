@@ -183,7 +183,7 @@ function updateConnectionInfo() {
     if (conn) {
         appState.lastNetworkInfo = {
             online: isOnline,
-            connectionType:conn.connectionType || 'N/A',
+            connectionType:conn.type || 'N/A',
             effectiveType: conn.effectiveType || 'N/A',
             downlink: conn.downlink ?? 'N/A',
             rtt: conn.rtt ?? 'N/A'
